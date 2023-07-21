@@ -1,0 +1,3 @@
+[submodule "path_to_submodule"] 
+  path = bear_identifier
+  url = https://huggingface.co/spaces/ethan-york/bear_identifier
