@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>York Pet Identifier</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="bear_identifier.html">Bear Identifier</a></li>
+            <li><a href="york_pet_identifier.html">York Pet Identifier</a></li>
+            <!-- Add more links here as needed -->
+        </ul>
+    </nav>
+
+    <main>
+        <header>
+            <h1>Welcome to My GitHub Repository for Fastai projects</h1>
+        </header>
+
+        <h2>York Pet Identifier</h2>
+        <input type="file" id="photo" accept="image/*">
+        <div id="results"></div>
+
+        <!-- Add the loading icon here -->
+        <div id="loading"></div>
+
+        <!-- Add the photo display loop section here -->
+        <h3>York Pets</h3>
+        <div id="photoDisplay">
+            <img src="York_pet_photos\Baloo.png" alt="Baloo" class="visible">
+            <img src="York_pet_photos\Bomber.png" alt="Bomber">
+            <img src="York_pet_photos\Kahlua.png" alt="Kahlua">
+            <img src="York_pet_photos\Kona.png" alt="Kona">
+            <img src="York_pet_photos\Lulu.png" alt="Lulu">
+            <img src="York_pet_photos\Nana.png" alt="Nana">
+            <img src="York_pet_photos\Luna.png" alt="Luna">
+            <img src="York_pet_photos\Xena.png" alt="Xena">
+            <!-- Add more default photos as needed -->
+        </div>
+    </main>
+
+    <script>
+        async function loaded(reader) {
+        const loadingIcon = document.getElementById('loading');
+        loadingIcon.style.display = 'block';
+         const response = await fetch("https://york_pet_id.hf.space/api/predict/",{
+             method:"POST",
+             body: JSON.stringify({"data":[reader.result]}),
+             headers: {
+                 "Content-Type": "application/json"}
+         });
+         const json = await response.json();
+         const label = json['data'][0]['confidences'][0]['label'];
+         results.innerHTML = `<br/><img src="${reader.result}" width="300" /><br/><p>${label}</p>`;
+         loadingIcon.style.display = 'none';
+     }
+     function read() {
+         const reader = new FileReader();
+         reader.addEventListener("load", () => loaded(reader))
+         reader.readAsDataURL(photo.files[0]);
+     }
+     photo.addEventListener('input',read);
+        // Your JavaScript code for image processing goes here
+
+        function showNextImage() {
+            const images = document.querySelectorAll('#photoDisplay img');
+            const visibleIndex = Array.from(images).findIndex(img => img.classList.contains('visible'));
+
+            if (visibleIndex >= 0) {
+                images[visibleIndex].classList.remove('visible');
+                const nextIndex = (visibleIndex + 1) % images.length;
+                images[nextIndex].classList.add('visible');
+            }
+        }
+
+        // Set the interval for the photo display loop
+        setInterval(showNextImage, 4000); // Change the time interval (in milliseconds) as needed
+    </script>
+</body>
+
+</html>
