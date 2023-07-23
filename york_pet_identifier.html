@@ -55,7 +55,7 @@
          });
          const json = await response.json();
          const label = json['data'][0]['confidences'][0]['label'];
-         const conf = json['data'][0]['confidences'][0]['confidence'];
+         const conf = json['data'][0]['confidences'][0]['confidence']*100;
          results.innerHTML = `<br/><img src="${reader.result}" width="300" /><br/><p>${label} with ${conf}% confidence</p>`;
          loadingIcon.style.display = 'none';
      }
